@@ -17,10 +17,6 @@ const Button = styled.button`
   justify-content: center;
   align-items: center;
   box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
-
-  &:hover {
-    background-color: ${(props) => props.theme.icon.hover};
-  }
 `;
 
 const Text = styled.div`
@@ -35,7 +31,14 @@ const Text = styled.div`
 const IconButton = ({ onClick, children, text }) => {
   return (
     <Layout>
-      <Button onClick={onClick}>{children}</Button>
+      <Button
+        onClick={(e) => {
+          e.stopPropagation();
+          onClick();
+        }}
+      >
+        {children}
+      </Button>
       {text && <Text>{text}</Text>}
     </Layout>
   );
