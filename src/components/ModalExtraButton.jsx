@@ -7,7 +7,7 @@ const Button = styled.button`
     "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
   cursor: pointer;
-  width: ${(props) => (props.$isLong ? "310px" : "151px")};
+  width: ${(props) => (props.$isLong ? "214px" : "80px")};
   height: 44px;
   border: none;
   border-radius: 8px;
@@ -36,7 +36,7 @@ const Text = styled.div`
   line-height: 1.4;
 `;
 
-const ModalButton = ({
+const ModalExtraButton = ({
   isLong = false,
   bgColor,
   isTextBlack = false,
@@ -59,4 +59,4 @@ const ModalButton = ({
   );
 };
 
-export default ModalButton;
+export default ModalExtraButton;

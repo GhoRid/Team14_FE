@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import Layout from "../../components/Layout";
-import { SkeletonPage } from "../SkeletonPage/SkeletonPage";
+// import { SkeletonPage } from "../SkeletonPage/SkeletonPage";
 import Post from "../../components/Post";
 import PostInfos from "../../components/PostInfos";
 
@@ -15,23 +15,23 @@ const posts = [
     id: 1,
     image: "sample.png",
     name: "안녕하세요",
-    hashtags: ["#대박", "#굿", "#하이"],
+    hashtags: ["대박", "굿", "하이"],
     isLiked: false,
     points: 100,
   },
   {
     id: 5,
     image: "sample2.png",
-    name: "예시2",
-    hashtags: ["#대박", "#굿", "#하이"],
+    name: "나는열글자가되고싶다아",
+    hashtags: [],
     isLiked: true,
     points: 100,
   },
   {
     id: 13,
     image: "sample5.png",
-    name: "예시3",
-    hashtags: ["#대박", "#굿", "#하이"],
+    name: "나는열두글자가되고싶다아",
+    hashtags: ["해시태그여덟글자", "테스트도여덟글자"],
     isLiked: true,
     points: 100,
   },
@@ -39,7 +39,7 @@ const posts = [
     id: 51,
     image: "sample3.png",
     name: "예시4",
-    hashtags: ["#대박", "#굿", "#하이"],
+    hashtags: ["hastag", "english", "version"],
     isLiked: false,
     points: 100,
   },
@@ -47,7 +47,7 @@ const posts = [
     id: 33,
     image: "sample4.png",
     name: "예시5",
-    hashtags: ["#대박", "#굿", "#하이"],
+    hashtags: ["hello", "spark", "대박"],
     isLiked: true,
     points: 100,
   },
@@ -95,26 +95,36 @@ const HomePage = () => {
   const progressBarRef = useRef();
   const pauseAnimation = useAnimation();
   const resumeAnimation = useAnimation();
+  let clickTimer = null;
 
   const handleProgessBarPaint = (s, t, progress) => {
     progressBarRef.current.style.setProperty("--progress", 1 - progress);
   };
 
   const handleSwiperClick = () => {
-    if (isPlaying) {
-      swiperRef.autoplay.pause();
-      pauseAnimation.start({
-        scale: [0, 1, 1, 1.2, 1],
-        opacity: [0, 1, 1, 1, 0],
-      });
-    } else {
-      swiperRef.autoplay.resume();
-      resumeAnimation.start({
-        scale: [0, 1, 1, 1.2, 1],
-        opacity: [0, 1, 1, 1, 0],
-      });
+    if (clickTimer) {
+      clearTimeout(clickTimer);
+      clickTimer = null;
+      return;
     }
-    setIsPlaying((prev) => !prev);
+
+    clickTimer = setTimeout(() => {
+      if (isPlaying) {
+        swiperRef.autoplay.pause();
+        pauseAnimation.start({
+          scale: [0, 1, 1, 1.2, 1],
+          opacity: [0, 1, 1, 1, 0],
+        });
+      } else {
+        swiperRef.autoplay.resume();
+        resumeAnimation.start({
+          scale: [0, 1, 1, 1.2, 1],
+          opacity: [0, 1, 1, 1, 0],
+        });
+      }
+      setIsPlaying((prev) => !prev);
+      clickTimer = null;
+    }, 200);
   };
 
   const handleAutoPlayPause = () => {
