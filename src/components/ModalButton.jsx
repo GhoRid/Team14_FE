@@ -22,12 +22,12 @@ const Layout = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 4px;
 `;
 
 const Icon = styled.img`
   width: 16px;
   height: 16px;
-  margin-right: 8px;
 `;
 
 const Text = styled.div`
