@@ -8,6 +8,10 @@ import PostInfos from "../../components/PostInfos";
 import { useRecoilState } from "recoil";
 import uploadFileState from "../../recoil/uploadImage/atom";
 import { useNavigate } from "react-router-dom";
+import uploadContentsState from "../../recoil/uploadContents/atom";
+import { useMutation } from "@tanstack/react-query";
+import { createPost } from "../../apis/api/post";
+import { instance, uploadInstance } from "../../apis";
 
 const Container = styled.div`
   width: 310px;
@@ -63,20 +67,27 @@ const ALLOWED_TEXT_REG_EXP = /^[a-z|A-Z|가-힣|ㄱ-ㅎ|ㅏ-ㅣ|0-9| \t|]+$/;
 const NOT_ALLOWED_TEXT_REG_EXP = /[{}[\]/?.;:|)*~`!^\\\-_+<>@#$%&=('"₩€£¥•“’‘]/;
 
 const isEmptyValue = (value) => {
-  if (!value.length) {
-    return true;
-  }
-  return false;
+  return !value.length;
 };
 
 const UploadPage = () => {
   const [uploadFile, setUploadFile] = useRecoilState(uploadFileState);
+  const [uploadContents, setUploadContents] =
+    useRecoilState(uploadContentsState);
   const [name, setName] = useState("");
-
   const [inputHashtag, setInputHashtag] = useState("");
   const [hashtags, setHashtags] = useState([]);
   const navigate = useNavigate();
-  
+  const { mutate } = useMutation(createPost, {
+    onSuccess: (e) => {
+      console.log("success", e);
+      navigate("/upload-done");
+    },
+    onError: (e) => {
+      console.log("error", e);
+    },
+  });
+
   useEffect(() => {
     if (!uploadFile.name) {
       navigate("/profile");
@@ -87,8 +98,8 @@ const UploadPage = () => {
     if (!uploadFile.name) {
       return;
     }
-    const image = URL.createObjectURL(file);
-    return image;
+    const imageUrl = URL.createObjectURL(file);
+    return imageUrl;
   };
 
   const handleNameChange = (e) => {
@@ -158,13 +169,16 @@ const UploadPage = () => {
   const handleUploadClick = (e) => {
     e.preventDefault();
     if (!name) {
+      // 닉네임은 필수항목입니다. - 사용자가 알아챌 수 있도록
       return;
     }
-    console.log("업로드 API 요청 파일 file:", uploadFile);
-    console.log("업로드 API 요청 name String:", name.trim());
-    console.log("업로드 API 요청 hashtags Array:", hashtags);
-    setUploadFile({});
-    navigate("/uploadDone");
+    setUploadContents({ name: name.trim(), hashtags });
+
+    const payload = new FormData();
+    payload.append("image", uploadFile);
+    payload.append("nickname", name.trim());
+    payload.append("hashTags", hashtags);
+    mutate(payload);
   };
 
   const handleCancelClick = (e) => {
