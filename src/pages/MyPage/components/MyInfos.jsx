@@ -23,21 +23,23 @@ const Number = styled.span`
 `;
 
 const MyInfos = ({ isLinked, infos }) => {
-  const { totalLikes, totalViews, fireworks } = infos;
+  const { totalLike, totalPoint } = infos?.data.response || {};
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const totalViews = 0;
 
   return (
     <List>
       <Item>
-        <Number>{isLinked && (totalLikes || "-")}</Number>
+        <Number>{isLinked ? totalLike || "-" : "-"}</Number>
         <Text>내가 받은 좋아요</Text>
       </Item>
       <Item>
-        <Number>{isLinked && (totalViews || "-")}</Number>
+        <Number>{isLinked ? totalViews || "-" : "-"}</Number>
         <Text>내가 받은 폭죽</Text>
       </Item>
       <Item onClick={() => setIsModalOpen(true)}>
-        <Number>{isLinked && (fireworks || "-")}</Number>
+        <Number>{isLinked ? totalPoint || "-" : "-"}</Number>
         <Text>
           내 폭죽
           <svg
