@@ -11,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 import uploadContentsState from "../../recoil/uploadContents/atom";
 import { useMutation } from "@tanstack/react-query";
 import { createPost } from "../../apis/api/post";
-import { instance, uploadInstance } from "../../apis";
 
 const Container = styled.div`
   width: 310px;
@@ -39,10 +38,6 @@ const InputBox = styled.form`
 `;
 
 const Input = styled.input`
-  font-family: "Pretendard Variable", Pretendard, -apple-system,
-    BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
-    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
   width: 100%;
   height: 44px;
   padding: 12px;
@@ -80,11 +75,11 @@ const UploadPage = () => {
   const navigate = useNavigate();
   const { mutate } = useMutation(createPost, {
     onSuccess: (e) => {
-      console.log("success", e);
       navigate("/upload-done");
     },
     onError: (e) => {
       console.log("error", e);
+      alert("업로드에 실패하였습니다.");
     },
   });
 
