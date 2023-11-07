@@ -26,11 +26,7 @@ const Name = styled.span`
   font-size: 16px;
 `;
 
-const Email = styled.span`
-  height: 18px;
-`;
-
-const KaKaoProfile = ({ username, email, profileImage }) => {
+const KaKaoProfile = ({ username, profileImage }) => {
   const navigate = useNavigate();
 
   const handleSettingButtonClick = () => {
@@ -42,7 +38,6 @@ const KaKaoProfile = ({ username, email, profileImage }) => {
       <SettingButton onClick={handleSettingButtonClick} />
       <Image src={profileImage} />
       <Name>{username}</Name>
-      <Email>{email}</Email>
     </Profile>
   );
 };
