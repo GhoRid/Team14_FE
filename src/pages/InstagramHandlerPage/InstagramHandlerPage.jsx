@@ -1,20 +1,11 @@
 import React, { useEffect } from "react";
-import Layout from "./Layout";
-import styled from "styled-components";
-import HeartLoader from "./HeartLoader";
+import Layout from "../../components/Layout";
+import { CenteredHeart } from "../../components/HeartLoader";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { instagramConnect } from "../apis/api/user";
+import { instagramConnect } from "../../apis/api/user";
 
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-`;
-
-const InstagramHandler = () => {
+const InstagramHandlerPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const code = new URLSearchParams(location.search).get("code");
@@ -25,7 +16,7 @@ const InstagramHandler = () => {
       navigate("/profile");
     },
     onError: (e) => {
-      console.log("인스타 연결 실패", e);
+      alert("인스타 연결에 실패했습니다. 다시 시도해주세요.");
       navigate("/profile");
     },
   });
@@ -36,11 +27,9 @@ const InstagramHandler = () => {
 
   return (
     <Layout>
-      <Container>
-        <HeartLoader />
-      </Container>
+      <CenteredHeart />
     </Layout>
   );
 };
 
-export default InstagramHandler;
+export default InstagramHandlerPage;

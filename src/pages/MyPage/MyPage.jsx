@@ -11,7 +11,7 @@ import MyDetailPage from "../MyDetailpage/MyDetailPage";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { fetchUserInfos } from "../../apis/api/user";
 import { fetchMyPosts } from "../../apis/api/post";
-import { SkeletonPage } from "../SkeletonPage/SkeletonPage";
+import { CenteredHeart } from "../../components/HeartLoader";
 
 const Container = styled.div`
   width: 358px;
@@ -53,52 +53,50 @@ const Detail = styled(motion.div)`
 `;
 
 const MyPage = () => {
+  const bottomObserverRef = useRef(null);
   const navigate = useNavigate();
   const detailMatch = useMatch("/profile/post/:postId");
-
   const {
-    isLoading,
+    isLoading: isUserInfosLoading,
     data: userInfos,
     refetch: refetchUserInfos,
   } = useQuery(["userInfos"], fetchUserInfos, {
-    onError: (e) => {
-      alert("사용자 정보를 찾을 수 없습니다.");
-      refetchUserInfos();
+    onError: () => {
+      alert("사용자 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
+      localStorage.removeItem("token");
       navigate("/");
+      window.location.reload();
     },
+    cacheTime: 0,
   });
-
   const {
+    isLoading: isMyLoading,
     data: my,
     fetchNextPage,
     refetch: refetchMy,
-  } = useInfiniteQuery(
-    ["my"],
-    fetchMyPosts,
-    {
-      getNextPageParam: (lastPage, allPages) => {
-        return lastPage.data.response.hasNext ? allPages.length : undefined;
-      },
+  } = useInfiniteQuery(["my"], ({ pageParam = 0 }) => fetchMyPosts(pageParam), {
+    getNextPageParam: (lastPage, allPages) => {
+      const {
+        data: {
+          response: { hasNext, lastPostId },
+        },
+      } = lastPage;
+      return hasNext ? lastPostId : undefined;
     },
-    {
-      onError: (e) => {
-        alert("게시물을 찾을 수 없습니다.");
-        refetchMy();
-        navigate("/");
-      },
-    }
-  );
-  const bottomObserverRef = useRef(null);
-
-  console.log(userInfos);
+    onError: () => {
+      alert("게시물을 찾을 수 없습니다.");
+      refetchMy();
+    },
+    cacheTime: 0,
+  });
 
   const handleCardClick = (postId) => {
     navigate(`post/${postId}`);
   };
 
-  const handleOverlayClick = async () => {
-    await refetchMy();
-    await refetchUserInfos();
+  const handleOverlayClick = () => {
+    refetchMy();
+    refetchUserInfos();
     navigate("/profile");
   };
 
@@ -112,7 +110,7 @@ const MyPage = () => {
     };
 
     const io = new IntersectionObserver(handleObserver, {
-      threshold: 0.3,
+      threshold: 0.8,
     });
 
     if (bottomObserverRef.current) {
@@ -122,22 +120,31 @@ const MyPage = () => {
     return () => {
       io.disconnect();
     };
-  }, [bottomObserverRef, fetchNextPage]);
+  }, [bottomObserverRef, fetchNextPage, my]);
+
+  if (isUserInfosLoading || isMyLoading) {
+    return (
+      <Layout>
+        <CenteredHeart />
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
       <Container>
         <KaKaoProfile
-          username={userInfos?.data.response.userName}
-          profileImage={userInfos?.data.response.profileImageUrl}
+          username={userInfos.data.response.username}
+          profileImage={userInfos.data.response.profileImage}
         />
         <InstaProfile
-          isLinked={userInfos?.data.response.isInstaConnected}
-          infos={userInfos}
+          isLinked={userInfos.data.response.instagram.isLinked}
+          fireworks={userInfos.data.response.fireworks}
+          infos={userInfos.data.response.instagram.infos}
         />
-        <UploadButton isLinked={userInfos?.data.response.isInstaConnected} />
+        <UploadButton isLinked={userInfos.data.response.instagram.isLinked} />
         <Album>
-          {my?.pages.map((page) =>
+          {my.pages.map((page) =>
             page.data.response.postList.map((post) => {
               return (
                 <Card
@@ -149,8 +156,8 @@ const MyPage = () => {
               );
             })
           )}
+          <div ref={bottomObserverRef}></div>
         </Album>
-        <div ref={bottomObserverRef}></div>
       </Container>
       <AnimatePresence>
         {detailMatch && (
