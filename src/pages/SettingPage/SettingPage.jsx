@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Layout from "../../components/Layout";
 import ListItem from "./components/ListItem";
 import styled from "styled-components";
@@ -6,6 +6,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useMutation } from "@tanstack/react-query";
 import { deleteUser, kakaoLogout } from "../../apis/api/user";
+import { Modal } from "../../components/Modal";
+import theme from "../../theme";
+import ModalButton from "../../components/ModalButton";
 
 const Header = styled.header`
   width: 100%;
@@ -51,37 +54,32 @@ const Quit = styled.div`
 `;
 
 const SettingPage = () => {
+  const [isLogOutModalOpen, setIsLogOutModalOpen] = useState(false);
+  const [isQuitModalOpen, setIsQuitModalOpen] = useState(false);
   const navigate = useNavigate();
   const { mutate: logout } = useMutation(kakaoLogout, {
     onSuccess: () => {
       localStorage.removeItem("token");
       navigate("/");
+      window.location.reload();
     },
-    onError: (e) => {
-      console.log("로그아웃 실패", e);
+    onError: () => {
+      alert("로그아웃에 실패했습니다. 다시 시도해주세요.");
     },
   });
   const { mutate: quit } = useMutation(deleteUser, {
     onSuccess: () => {
       localStorage.removeItem("token");
       navigate("/");
+      window.location.reload();
     },
-    onError: (e) => {
-      console.log("탈퇴 실패", e);
+    onError: () => {
+      alert("회원탈퇴에 실패했습니다. 다시 시도해주세요.");
     },
   });
 
   const handleAskClick = () => {
     alert("미구현 기능입니다.");
-    console.log("카카오 문의하기 채널로 이동");
-  };
-
-  const handleLogOutClick = () => {
-    logout();
-  };
-
-  const handleQuitClick = () => {
-    quit();
   };
 
   return (
@@ -112,11 +110,39 @@ const SettingPage = () => {
         <Main>
           <List>
             <ListItem onClick={handleAskClick}>카카오 문의하기</ListItem>
-            <ListItem onClick={handleLogOutClick}>로그아웃</ListItem>
+            <ListItem onClick={() => setIsLogOutModalOpen(true)}>
+              로그아웃
+            </ListItem>
           </List>
-          <Quit onClick={handleQuitClick}>회원 탈퇴</Quit>
+          <Quit onClick={() => setIsQuitModalOpen(true)}>회원 탈퇴</Quit>
         </Main>
       </motion.div>
+      <Modal.Long
+        isOpen={isLogOutModalOpen}
+        onRequestClose={() => setIsLogOutModalOpen(false)}
+        text1="로그아웃 하시겠어요?"
+        text2="서비스 이용이 제한될 수 있습니다."
+      >
+        <ModalButton
+          onClick={() => setIsLogOutModalOpen(false)}
+          bgColor={theme.modal.gray}
+          text="취소"
+        />
+        <ModalButton onClick={logout} bgColor={theme.red} text="로그아웃" />
+      </Modal.Long>
+      <Modal.Long
+        isOpen={isQuitModalOpen}
+        onRequestClose={() => setIsQuitModalOpen(false)}
+        text1="정말 탈퇴하시겠습니까?"
+        text2="30일 후 계정 정보가 삭제됩니다."
+      >
+        <ModalButton
+          onClick={() => setIsQuitModalOpen(false)}
+          bgColor={theme.modal.gray}
+          text="취소"
+        />
+        <ModalButton onClick={quit} bgColor={theme.red} text="탈퇴하기" />
+      </Modal.Long>
     </Layout>
   );
 };

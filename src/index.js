@@ -68,6 +68,7 @@ const GlobalStyle = createGlobalStyle`
     color: ${(props) => props.theme.white};
     font-size: 14px;
     font-weight: 400;
+    cursor: default;
   }
   a {
     text-decoration: none;
@@ -88,6 +89,18 @@ const GlobalStyle = createGlobalStyle`
     "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
     font-size: 14px;
     font-weight: 400;
+  }
+  img {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
   }
 `;
 

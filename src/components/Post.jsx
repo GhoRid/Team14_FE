@@ -5,7 +5,7 @@ import { motion, useAnimation } from "framer-motion";
 import { Modal } from "./Modal";
 import ModalButton from "./ModalButton";
 import theme from "../theme";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
   fetchHomeInstagramId,
   fetchPopInstagramId,
@@ -52,6 +52,13 @@ const ButtonContainer = styled.div`
   z-index: 9;
 `;
 
+const heartStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+};
+
 const BasePost = ({ image, info, children }) => {
   return (
     <Layout>
@@ -62,14 +69,7 @@ const BasePost = ({ image, info, children }) => {
   );
 };
 
-const HomePost = ({
-  id,
-  image,
-  info,
-  isLikedPost,
-  points,
-  handleAutoPlayPause,
-}) => {
+const HomePost = ({ id, image, info, isLikedPost, handleAutoPlayPause }) => {
   const isLoggedIn = !!localStorage.getItem("token");
   const [toggleLikeOn, setToggleLikeOn] = useState(isLikedPost);
   const [isPointModalOpen, setIsPointModalOpen] = useState(false);
@@ -78,22 +78,17 @@ const HomePost = ({
   const navigate = useNavigate();
   const likeAnimation = useAnimation();
   const dbclickAnimation = useAnimation();
-  const { mutate: postLike } = useMutation(updateLike, {
-    onSuccess: (e) => {
-      console.log("success", e);
-    },
-    onError: (e) => {
-      console.log("err", e);
-    },
-  });
+  const { mutate: postLike } = useMutation(updateLike);
   const { mutate: getInsta } = useMutation(fetchHomeInstagramId, {
-    onSuccess: (e) => {
-      console.log("폭죽 사용 성공", e);
+    onSuccess: (res) => {
+      const instagramId = res.data.response.instaId;
+      window.location.href = `https://www.instagram.com/${instagramId}`;
     },
-    onError: (e) => {
-      console.log("폭죽 사용 실패", e);
-      setIsPointModalOpen(false);
-      setIsPointErrorModalOpen(true);
+    onError: (err) => {
+      if (err.response?.data?.error.code === "446") {
+        setIsPointModalOpen(false);
+        setIsPointErrorModalOpen(true);
+      }
     },
   });
 
@@ -160,9 +155,7 @@ const HomePost = ({
   };
 
   const handlePointButtonClick = () => {
-    const payload = { postId: id };
-    console.log(payload);
-    getInsta(payload);
+    getInsta({ postId: id });
   };
 
   return (
@@ -175,12 +168,7 @@ const HomePost = ({
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-        }}
+        style={heartStyle}
       >
         <motion.path
           d="M4.45067 13.9082L11.4033 20.4395C11.6428 20.6644 11.7625 20.7769 11.9037 20.8046C11.9673 20.8171 12.0327 20.8171 12.0963 20.8046C12.2375 20.7769 12.3572 20.6644 12.5967 20.4395L19.5493 13.9082C21.5055 12.0706 21.743 9.0466 20.0978 6.92607L19.7885 6.52734C17.8203 3.99058 13.8696 4.41601 12.4867 7.31365C12.2913 7.72296 11.7087 7.72296 11.5133 7.31365C10.1304 4.41601 6.17972 3.99058 4.21154 6.52735L3.90219 6.92607C2.25695 9.0466 2.4945 12.0706 4.45067 13.9082Z"
@@ -189,7 +177,11 @@ const HomePost = ({
         />
       </motion.svg>
       <ButtonContainer>
-        <IconButton onClick={handleLikeButtonClick}>
+        <IconButton
+          onClick={handleLikeButtonClick}
+          name="like"
+          title="Update like"
+        >
           <motion.svg
             width={24}
             height={24}
@@ -212,7 +204,11 @@ const HomePost = ({
             />
           </motion.svg>
         </IconButton>
-        <IconButton onClick={handleInstaButtonClick}>
+        <IconButton
+          onClick={handleInstaButtonClick}
+          name="instagram"
+          title="Visit instagram"
+        >
           <img
             src="/icons/instagram.png"
             width={20}
@@ -223,7 +219,7 @@ const HomePost = ({
         <Modal.Long
           isOpen={isPointModalOpen}
           onRequestClose={() => setIsPointModalOpen(false)}
-          text1={`${points} 폭죽을 사용하여`}
+          text1="100 폭죽을 사용하여"
           text2="인스타그램 계정에 방문할 수 있어요!"
         >
           <ModalButton
@@ -269,7 +265,15 @@ const HomePost = ({
   );
 };
 
-const PopPost = ({ id, image, info, isLikedPost, numberLikes = 0, points }) => {
+const PopPost = ({
+  id,
+  image,
+  info,
+  isLikedPost,
+  numberLikes = 0,
+  points,
+  level,
+}) => {
   const [isPointModalOpen, setIsPointModalOpen] = useState(false);
   const [isPointErrorModalOpen, setIsPointErrorModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -277,52 +281,19 @@ const PopPost = ({ id, image, info, isLikedPost, numberLikes = 0, points }) => {
   const [likes, setLikes] = useState(numberLikes);
   const likeAnimation = useAnimation();
   const dbclickAnimation = useAnimation();
-  const { mutate: postLike } = useMutation(updateLike, {
-    onSuccess: (e) => {
-      console.log("success", e);
-    },
-    onError: (e) => {
-      console.log("err", e);
-    },
-  });
+  const { mutate: postLike } = useMutation(updateLike);
   const { mutate: getInsta } = useMutation(fetchPopInstagramId, {
-    onSuccess: (e) => {
-      console.log("폭죽 사용 성공", e);
+    onSuccess: (res) => {
+      const instagramId = res.data.response.instaId;
+      window.location.href = `https://www.instagram.com/${instagramId}`;
     },
-    onError: (e) => {
-      console.log("폭죽 사용 실패", e);
-      setIsPointModalOpen(false);
-      setIsPointErrorModalOpen(true);
+    onError: (err) => {
+      if (err.response?.data?.error.code === "446") {
+        setIsPointModalOpen(false);
+        setIsPointErrorModalOpen(true);
+      }
     },
   });
-
-  // 인기 api isLiked 수정하고 다시 한번 살펴보기
-  // const queryClient = useQueryClient();
-  // const { mutate } = useMutation((newOption) => updateLike(newOption), {
-  //   onMutate: async (newOption) => {
-  //     await queryClient.cancelQueries(["popDetail", id]);
-  //     const prevData = queryClient.getQueryData(["popDetail", id]);
-  //     console.log("option", newOption);
-  //     console.log("prev", prevData);
-  //     const newData = { ...prevData };
-  //     console.log(newData.data.response);
-  //     newData.data.response.isLiked = newOption.like;
-  //     console.log("new", newData);
-  //     queryClient.setQueryData(["popDetail", id], newData);
-
-  //     return { prevData };
-  //   },
-  //   onSuccess: (e) => {
-  //     console.log("좋아요 요청 성공", e);
-  //   },
-  //   onError: (error, _, context) => {
-  //     console.log("좋아요 요청 에러", error);
-  //     queryClient.setQueryData(["popDetail", id], context?.prevData);
-  //   },
-  //   onSettled: () => {
-  //     queryClient.invalidateQueries(["popDetail", id]);
-  //   },
-  // });
 
   const handleDoubleClick = () => {
     if (!toggleLikeOn) {
@@ -370,9 +341,7 @@ const PopPost = ({ id, image, info, isLikedPost, numberLikes = 0, points }) => {
   };
 
   const handlePointButtonClick = () => {
-    const payload = { postId: id, postLevel: 1 };
-    console.log(payload);
-    getInsta(payload);
+    getInsta({ postId: id, postLevel: level });
   };
 
   return (
@@ -385,12 +354,7 @@ const PopPost = ({ id, image, info, isLikedPost, numberLikes = 0, points }) => {
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-        }}
+        style={heartStyle}
       >
         <motion.path
           d="M4.45067 13.9082L11.4033 20.4395C11.6428 20.6644 11.7625 20.7769 11.9037 20.8046C11.9673 20.8171 12.0327 20.8171 12.0963 20.8046C12.2375 20.7769 12.3572 20.6644 12.5967 20.4395L19.5493 13.9082C21.5055 12.0706 21.743 9.0466 20.0978 6.92607L19.7885 6.52734C17.8203 3.99058 13.8696 4.41601 12.4867 7.31365C12.2913 7.72296 11.7087 7.72296 11.5133 7.31365C10.1304 4.41601 6.17972 3.99058 4.21154 6.52735L3.90219 6.92607C2.25695 9.0466 2.4945 12.0706 4.45067 13.9082Z"
@@ -399,7 +363,12 @@ const PopPost = ({ id, image, info, isLikedPost, numberLikes = 0, points }) => {
         />
       </motion.svg>
       <ButtonContainer>
-        <IconButton onClick={handleLikeButtonClick} text={convertToK(likes)}>
+        <IconButton
+          onClick={handleLikeButtonClick}
+          text={convertToK(likes)}
+          name="like"
+          title="Update like"
+        >
           <motion.svg
             width={24}
             height={24}
@@ -426,6 +395,8 @@ const PopPost = ({ id, image, info, isLikedPost, numberLikes = 0, points }) => {
           onClick={() => {
             setIsPointModalOpen(true);
           }}
+          name="instagram"
+          title="Visit instagram"
         >
           <img
             src="/icons/instagram.png"
@@ -481,14 +452,7 @@ const MyPost = ({
   const [likes, setLikes] = useState(numberLikes);
   const likeAnimation = useAnimation();
   const dbclickAnimation = useAnimation();
-  const { mutate } = useMutation(updateLike, {
-    onSuccess: (e) => {
-      console.log("success", e);
-    },
-    onError: (e) => {
-      console.log("err", e);
-    },
-  });
+  const { mutate } = useMutation(updateLike);
 
   const handleDoubleClick = () => {
     if (!toggleLikeOn) {
@@ -545,12 +509,7 @@ const MyPost = ({
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-        }}
+        style={heartStyle}
       >
         <motion.path
           d="M4.45067 13.9082L11.4033 20.4395C11.6428 20.6644 11.7625 20.7769 11.9037 20.8046C11.9673 20.8171 12.0327 20.8171 12.0963 20.8046C12.2375 20.7769 12.3572 20.6644 12.5967 20.4395L19.5493 13.9082C21.5055 12.0706 21.743 9.0466 20.0978 6.92607L19.7885 6.52734C17.8203 3.99058 13.8696 4.41601 12.4867 7.31365C12.2913 7.72296 11.7087 7.72296 11.5133 7.31365C10.1304 4.41601 6.17972 3.99058 4.21154 6.52735L3.90219 6.92607C2.25695 9.0466 2.4945 12.0706 4.45067 13.9082Z"
@@ -562,6 +521,8 @@ const MyPost = ({
         <IconButton
           onClick={handleLikeButtonClick}
           text={likes.toLocaleString()}
+          name="like"
+          title="Update like"
         >
           <motion.svg
             width={24}
@@ -585,7 +546,11 @@ const MyPost = ({
             />
           </motion.svg>
         </IconButton>
-        <IconButton text={numberInstas.toLocaleString()}>
+        <IconButton
+          text={numberInstas.toLocaleString()}
+          name="instagram"
+          title="Visit instagram"
+        >
           <img
             src="/icons/instagram.png"
             width={20}
@@ -595,8 +560,10 @@ const MyPost = ({
         </IconButton>
         <IconButton
           onClick={() => {
-            console.log("다운로드 이벤트 발생");
+            alert("미구현 기능입니다.");
           }}
+          name="download"
+          title="Download"
         >
           <svg
             width="24"
