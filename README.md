@@ -93,6 +93,12 @@
 
 - [와이어프레임(Figma) 보러가기](https://www.figma.com/file/n1fenCQYDfghtHT2Qua0YL/kakao14WireBoard?type=design&node-id=0%3A1&mode=design&t=oSx3LovlAi3IIcv2-1)
 
+### 📚 ERD
+
+- [백엔드 개발 내용 보러가기](https://github.com/Step3-kakao-tech-campus/Team14_BE)
+
+<img src="img/erd.png" alt="ERD"/>
+
 ### 💻 개발
 
 ⚙️ 기술 스택
