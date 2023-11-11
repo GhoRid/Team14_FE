@@ -1,6 +1,6 @@
 # 카카오 테크 캠퍼스 3단계 과제: 축팅
 
-<div style="width: 100%; display: flex; justify-content: center;">
+<div style="display: flex; justify-content: center; align: center;">
   <img src="img/home.png" alt="홈페이지" width="250px" />
   <img src="img/pop.png" alt="인기페이지" width="250px" />
   <img src="img/my.png" alt="마이페이지" width="250px" />
