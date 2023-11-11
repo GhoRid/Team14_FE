@@ -155,7 +155,7 @@ Development
 
 (파일 용량이 크기도 하고, gif 변환시 느려지는 이슈가 있어 파일로 올립니다. 양해 부탁드립니다. 🥲)
 
-- [시현 영상 다운로드](https://drive.google.com/file/d/1NsLP3KFZE2CUSgwqEm7uGOyySQEIONOg/view?usp=sharing](https://drive.google.com/drive/folders/1oPUroufBp6zQOicyK0lp3lUBwG1l65Mw?usp=sharing)
+- [시현 영상 다운로드](https://drive.google.com/drive/folders/1oPUroufBp6zQOicyK0lp3lUBwG1l65Mw?usp=sharing)
 
 <br />
 
