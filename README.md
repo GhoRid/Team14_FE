@@ -1,5 +1,11 @@
 # 카카오 테크 캠퍼스 3단계 과제: 축팅
 
+<div style="display: flex; justify-content: center;">
+  <img src="img/home.png" alt="홈페이지" width="200px" />
+  <img src="img/pop.png" alt="인기페이지" width="200px" />
+  <img src="img/my.png" alt="마이페이지" width="200px" />
+</div>
+
 포토부스의 사진을 공유하고, 만남을 연결하는 서비스 **축팅**입니다.
 
 <br />
