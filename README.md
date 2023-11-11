@@ -97,6 +97,8 @@
 
 - [백엔드 개발 내용 보러가기](https://github.com/Step3-kakao-tech-campus/Team14_BE)
 
+- [백엔드 배포 주소](https://ka53958d06e25a.user-app.krampoline.com/)
+
 <img src="img/erd.png" alt="ERD"/>
 
 ### 💻 개발
