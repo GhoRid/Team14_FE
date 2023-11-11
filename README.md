@@ -12,21 +12,48 @@
 
 ## 👋 팀 소개
 
+프론트엔드 3인, 백엔드 4인으로 이루어진 7인 팀 SPARK 입니다.
+
+### FE
+
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/iam454"><img src="https://github.com/iam454.png" width="50"></a></td>
     <td align="center"><a href="https://github.com/MINJOO-KIM"><img src="https://github.com/MINJOO-KIM.png" width="50"></a></td>
     <td align="center"><a href="https://github.com/GhoRid"><img src="https://github.com/GhoRid.png" width="50"></a></td>
+    <td align="center"><a href="https://github.com/iam454"><img src="https://github.com/iam454.png" width="50"></a></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/iam454">서완석(iam454)</a></td>
     <td align="center"><a href="https://github.com/MINJOO-KIM">김민주(MINJOO-KIM)</a></td>
     <td align="center"><a href="https://github.com/GhoRid">박건형(GhoRid)</a></td>
+    <td align="center"><a href="https://github.com/iam454">서완석(iam454)</a></td>
+  </tr>
+  <tr>
+    <td align="center">리액셔너</td>
+    <td align="center">기획리더</td>
+    <td align="center">테크리더</td>
+  </tr>
+<table>
+
+### BE
+
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/GoBeromsu"><img src="https://github.com/GoBeromsu.png" width="50"></a></td>
+    <td align="center"><a href="https://github.com/yuseonkim"><img src="https://github.com/yuseonkim.png" width="50"></a></td>
+    <td align="center"><a href="https://github.com/SongGaEun16"><img src="https://github.com/SongGaEun16.png" width="50"></a></td>
+    <td align="center"><a href="https://github.com/hwangdaesun"><img src="https://github.com/hwangdaesun.png" width="50"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/GoBeromsu">고범수(GoBeromsu)</a></td>
+    <td align="center"><a href="https://github.com/yuseonkim">김유선(yuseonkim)</a></td>
+    <td align="center"><a href="https://github.com/SongGaEun16">송가은(SongGaEun16)</a></td>
+    <td align="center"><a href="https://github.com/hwangdaesun">황대선(hwangdaesun)</a></td>
   </tr>
   <tr>
     <td align="center">테크리더</td>
-    <td align="center">리액셔너</td>
-    <td align="center">기획리더</td>
+    <td align="center">타임키퍼</td>
+    <td align="center">리마인더</td>
+    <td align="center">조장</td>
   </tr>
 <table>
 
