@@ -10,6 +10,28 @@
 
 <br />
 
+## 👋 팀 소개
+
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/iam454"><img src="https://github.com/iam454.png" width="50"></a></td>
+    <td align="center"><a href="https://github.com/MINJOO-KIM"><img src="https://github.com/MINJOO-KIM.png" width="50"></a></td>
+    <td align="center"><a href="https://github.com/GhoRid"><img src="https://github.com/GhoRid.png" width="50"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/iam454">서완석(iam454)</a></td>
+    <td align="center"><a href="https://github.com/MINJOO-KIM">김민주(MINJOO-KIM)</a></td>
+    <td align="center"><a href="https://github.com/GhoRid">박건형(GhoRid)</a></td>
+  </tr>
+  <tr>
+    <td align="center">테크리더</td>
+    <td align="center">리액셔너</td>
+    <td align="center">기획리더</td>
+  </tr>
+<table>
+
+<br />
+
 ## 🧐 프로젝트 소개
 
 개발 기간 : 2023년 9월 24일 ~ 2023년 11월 11일
